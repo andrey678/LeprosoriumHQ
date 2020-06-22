@@ -5,7 +5,11 @@ require "sinatra/activerecord"
 
 set :database, {adapter:"sqlite3",
                 database:"leprosorium.db"}
-                
+
+class Post < ActiveRecord::Base
+end
+class Comment < ActiveRecord::Base
+end
  
 def init_db
   @db = SQLite3::Database.new 'leprosorium.db'
