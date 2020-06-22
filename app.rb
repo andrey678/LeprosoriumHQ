@@ -10,34 +10,34 @@ class Post < ActiveRecord::Base
 end
 class Comment < ActiveRecord::Base
 end
- 
-def init_db
-  @db = SQLite3::Database.new 'leprosorium.db'
-  @db.results_as_hash = true 
-end
 
-before do
-  init_db
-end
+# def init_db
+#   @db = SQLite3::Database.new 'leprosorium.db'
+#   @db.results_as_hash = true 
+# end
 
-configure do
-  init_db
-    @db.execute 'CREATE TABLE IF NOT EXISTS Posts 
-    (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_date DATE,
-    author       TEXT,
-    content      TEXT
-    )'
+# before do
+#   init_db
+# end
 
-    @db.execute 'CREATE TABLE IF NOT EXISTS Comments 
-    (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    created_date DATE,
-    content      TEXT,
-    post_id      INTEGER
-    )'
-end
+# configure do
+#   init_db
+#     @db.execute 'CREATE TABLE IF NOT EXISTS Posts 
+#     (
+#     id           INTEGER PRIMARY KEY AUTOINCREMENT,
+#     created_date DATE,
+#     author       TEXT,
+#     content      TEXT
+#     )'
+
+#     @db.execute 'CREATE TABLE IF NOT EXISTS Comments 
+#     (
+#     id           INTEGER PRIMARY KEY AUTOINCREMENT,
+#     created_date DATE,
+#     content      TEXT,
+#     post_id      INTEGER
+#     )'
+# end
 
 
 get "/" do
