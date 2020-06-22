@@ -7,6 +7,8 @@ set :database, {adapter:"sqlite3",
                 database:"leprosorium.db"}
 
 class Post < ActiveRecord::Base
+  validates :author, presence: true
+  validates :content, presence: true
 end
 class Comment < ActiveRecord::Base
 end
@@ -39,68 +41,67 @@ end
 #     )'
 # end
 
-
+before do
+  @posts = Post.all
+end
 get "/" do
-  @results = @db.execute 'select * from Posts order by id desc'
-        erb :index
+
+          erb :index
 end
 
 
 get '/new' do
+  @p = Post.new
             erb :new
 end
 
 post '/new' do
-  @author = params[:author]
-  @content = params[:content]
-      if @content.length <= 0
-        @error = 'Type post text'
-      return erb :new
+
+  @p = Post.new   params[:post]
+ 
+        if @p.save 
+          erb "<h2>Спасибо.Пост опубликован.</h2>"
+        else
+        @error = @p.errors.full_messages.first
+       erb :new
     end
-      if @author.length <=0
-        @error = 'Type your name'
-        return erb :new
-      end
-  @db.execute 'insert into Posts (author,content,created_date) values (?,?,datetime())',[@author,@content]
-  
-  redirect to '/'
-end   
+  end   
 
-get '/details/:post_id' do
-    post_id = params[:post_id]
+# get '/details/:id' do
+#     post_id = params[:post_id]
 
-    results = @db.execute 'select * from Posts where id = ?',[post_id]
-    @row = results[0]
+#     results = @db.execute 'select * from Posts where id = ?',[post_id]
+#     @row = results[0]
 
-    @comments = @db.execute 'select * from Comments where post_id = ? order by id',[post_id]
+#     @comments = @db.execute 'select * from Comments where post_id = ? order by id',[post_id]
 
-    erb :details  
-end
+#     erb :details  
+# end
 
-post '/details/:post_id' do
+# post '/details/:post_id' do
 
-    post_id = params[:post_id]
+#     post_id = params[:post_id]
 
-    content = params[:content]
+#     content = params[:content]
 
-    if content.length <= 0
-        @error = 'Type your comment, please'
-        return erb :details
-      end
+#     if content.length <= 0
+#         @error = 'Type your comment, please'
+#         return erb :details
+#       end
 
-    @db.execute 'insert into Comments 
-    (
-    content,
-    created_date,
-    post_id
-    ) 
-    values 
-    (
-    ?,
-    datetime(),
-    ?
-    )',[content,post_id]
+#     @db.execute 'insert into Comments 
+#     (
+#     content,
+#     created_date,
+#     post_id
+#     ) 
+#     values 
+#     (
+#     ?,
+#     datetime(),
+#     ?
+#     )',[content,post_id]
 
-    redirect to ('/details/' + post_id)
+#     redirect to ('/details/' + post_id)
     
-end
+# end
